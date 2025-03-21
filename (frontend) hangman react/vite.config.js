@@ -1,12 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server:{
+  server: {
+    // Proxy API requests to the Spring Boot backend
     proxy: {
-      '/api': 'http://localhost:8091',
-    }
-  }
-})
+      '/api': 'http://localhost:8091', // Forward /api to the backend API running on localhost:8091
+    },
+    port: 5714, // You can change this to the port you want for your React app
+  },
+});
