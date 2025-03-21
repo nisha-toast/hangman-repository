@@ -1,0 +1,35 @@
+.hangmanPage {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.hangmanTitle {
+    font-size: 65px;
+    letter-spacing: 0.1em;
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: white;
+    text-shadow:
+        8px 8px darkslateblue,
+        15px 12px #000000;
+}
+
+.hangmanInstructions {
+    font-family: 'Protest Strike';
+    font-style: normal;
+    margin: 40px;
+    font-weight: bold;
+    font-size: 24px;
+    /* color:#ff4d4d; */
+}
+
+.hangmanGame{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }

@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap');
+
+* {
+  box-sizing: border-box;
+  
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  
+
+  color-scheme: light dark;
+  /* color: rgba(255, 255, 255, 0.87); */
+  color:darkslateblue;
+  /* background-color: #242424; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --color-gray-100: #f4f3f1;
+  --color-gray-200: #dddbd8;
+  --color-gray-300: #ccc9c6;
+  --color-gray-400: #aeaba7;
+  --color-gray-500: #8a8784;
+  --color-gray-600: #656360;
+  --color-gray-700: #4b4a47;
+  --color-gray-800: #31302e;
+  --color-gray-900: #1f1d1b;
+
+  --color-primary-100: #fcf3e1;
+  --color-primary-200: #fceccd;
+  --color-primary-300: #fae1af;
+  --color-primary-400: #fbd997;
+  --color-primary-500: #ffd37c;
+  --color-primary-600: #f9c762;
+  --color-primary-700: #fbc14d;
+  --color-primary-800: #fab833;
+  --color-primary-900: #f6ad1b;
+
+  
+}
+
+body {
+  margin: 0;
+  background-image: url(/background3.png);
+  background-size: "cover";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  /* background-color: #1a1a1a; */
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.keyboard-button{
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family: Protest Strike, serif;
+  border: none;
+  border-radius: 10px;
+  /* background: #f0f0f0; */
+  cursor: pointer;
+  transition: background 0.3s;
+  color: #444 ;
+}
+
+.keyboard-button:not(:disabled):hover{
+  /* color: seagreen; */
+  background-color: violet;
+}
+
+.start-game-button:hover{
+  background-color: green;
+}
+
+.start-game-button, .back-button{
+  padding: 10px 20px;
+  margin: 10px 0;
+  width: 200px;
+  text-align: center;
+  font-size: 16px;
+  background-color:darkseagreen;
+}
+
+.fancy-word{
+  font-size: 50px;
+  font-family: Protest Strike, serif;
+  font-weight: bold;
+  color:darkslateblue;
+}
+.word-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.word-left {
+  text-align: right;
+  margin-right: -115px; /* Moves it slightly closer */
+}
+
+.word-middle {
+  text-align: center;
+  flex-grow: 1;
+}
