@@ -1,6 +1,9 @@
 # Hangman with ReactJS and Java SpringBoot
 
-This is a work in progress. A simple Hangman game with a backend built using Java Spring Boot and a frontend using ReactJS.
+A simple Hangman game with a backend built using Java Spring Boot and a frontend using ReactJS. Guess the word before you run out of lives. 
+
+## How to win?
+Guess the word correctly 5 times.
 
 ## Steps to Run Locally
 
