@@ -29,7 +29,7 @@ Guess the word correctly 5 times.
 
 4. **Run the Game:**
    - Once both the backend and frontend are running, the game should be accessible at:
-     - `http://localhost:5714`
+     - `http://localhost:5173`
 
 ## Features
 - A simple Hangman game with a reactive UI built with ReactJS.
@@ -38,8 +38,10 @@ Guess the word correctly 5 times.
 
 ## Screenshot
 
-![Hangman Game Screenshot](./images/hangman-screenshot.png)
-
+<p float="left">
+  <img src="./images/hangman-LandingPage-screenshot.png" width="300" />
+  <img src="./images/hangman-GameOver-screenshot.png" width="300" />
+</p>
 
 ## Suggestions for Future Work
 - Add more features like word submission.
