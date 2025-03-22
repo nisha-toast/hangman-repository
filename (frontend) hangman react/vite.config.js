@@ -1,6 +1,3 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -8,6 +5,6 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8091', // Forward /api to the backend API running on localhost:8091
     },
-    port: 5714, // You can change this to the port you want for your React app
+    port: 5173, // You can change this to the port you want, just be sure to change the cross origins port in the backend within controller and corsconfig
   },
 });
