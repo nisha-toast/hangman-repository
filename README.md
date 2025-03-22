@@ -43,6 +43,9 @@ Guess the word correctly 5 times.
   <img src="./images/hangman-GameOver-screenshot.png" width="700" />
 </p>
 
+## Game Play
+<img src="images/Hangman.gif" alt="Game Animation" width="700">
+
 ## Suggestions for Future Work
 - Add more features like word submission.
 - Instead of a simple array of words, use an API to take words from elsewhere, or allow users to submit words and add to a database instead.
