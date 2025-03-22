@@ -39,8 +39,8 @@ Guess the word correctly 5 times.
 ## Screenshot
 
 <p float="left">
-  <img src="./images/hangman-LandingPage-screenshot.png" width="300" />
-  <img src="./images/hangman-GameOver-screenshot.png" width="300" />
+  <img src="./images/hangman-LandingPage-screenshot.png" width="700" />
+  <img src="./images/hangman-GameOver-screenshot.png" width="700" />
 </p>
 
 ## Suggestions for Future Work
