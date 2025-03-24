@@ -34,11 +34,11 @@ https://maven.apache.org/install.html
 `git clone https://github.com/nisha-toast/hangman-repository.git
 cd hangman-repository`
    - Enter the frontend folder to install the dependencies:
-   - `cd "(frontend) hangman react"
+   - `cd "(frontend) hangman react"`
    - `npm install`
 
 **Run the Game:**
-   - Once both the backend and
+   - Once both the backend and frontend dependencies are settled, return to the root directory.
    - Double click the run.bat file in the root directory and follow the prompts
    - The game should be running on `http://localhost:5173`
 
