@@ -7,7 +7,10 @@ Guess the word correctly 5 times.
 
 ## Steps to Run Locally
 
-Method 1: Run Manually Without Docker (Using Batch File)
+### Method 1: Run Manually Without Docker (Using Batch File)
+** If you have the below dependencies, simply run the run.bat file. **
+
+
 #### 1. Backend (Spring Boot) 
 
 **Prerequisites**
@@ -23,11 +26,11 @@ https://maven.apache.org/install.html
 
 - **Node.js and npm (Node Package Manager)**  
   You'll need to install Node.js and npm to run the React frontend. You can download the latest version of Node.js from the [official website](https://nodejs.org/), which will include npm.
-   - Verify the installation by running:``` bash
-     node -v
-     npm -v
-     ```
-**Clone the Repository:**
+   - Verify the installation by running:
+     `node -v`
+     `npm -v`
+     
+**Clone the Repository into your chosen directory:**
 `git clone https://github.com/nisha-toast/hangman-repository.git
 cd hangman-repository`
    - Enter the frontend folder to install the dependencies:
