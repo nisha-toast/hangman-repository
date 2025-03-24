@@ -23,7 +23,7 @@ https://maven.apache.org/install.html
 
 - **Node.js and npm (Node Package Manager)**  
   You'll need to install Node.js and npm to run the React frontend. You can download the latest version of Node.js from the [official website](https://nodejs.org/), which will include npm.
-   - Verify the installation by running:```bash
+   - Verify the installation by running:``` bash
      node -v
      npm -v
      ```
