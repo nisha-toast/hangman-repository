@@ -15,9 +15,9 @@ Guess the word correctly 5 times.
 
 **Prerequisites**
 
-**Java (JDK 17 or Higher):**
+- **Java (JDK 17 or Higher):**
 
- **Maven:**
+-  **Maven:**
 https://maven.apache.org/install.html
 
 #### 2. Frontend (React)
