@@ -7,29 +7,37 @@ Guess the word correctly 5 times.
 
 ## Steps to Run Locally
 
-1. **Download the Project Folders:**
-   - Download or clone the two folders:
-     - `backend` (Java Spring Boot)
-     - `frontend` (ReactJS)
-   
-2. **Set Up the Backend (Spring Boot):**
-   - Import the `backend` folder as a Maven project into your preferred Java IDE (e.g., Eclipse, IntelliJ IDEA).
-   - In the Java IDE, run the project with Maven build, using the goal: 
-     ```bash
-     mvn spring-boot:run
-     ```
+Method 1: Run Manually Without Docker (Using Batch File)
+#### 1. Backend (Spring Boot) 
 
-3. **Set Up the Frontend (ReactJS):**
-   - Import the `frontend` folder into an IDE compatible with React (e.g., Visual Studio Code).
-   - Open the terminal in the frontend directory and run:
-     ```bash
-     npm install
-     npm run dev
-     ```
+**Prerequisites**
 
-4. **Run the Game:**
-   - Once both the backend and frontend are running, the game should be accessible at:
-     - `http://localhost:5173`
+**Java (JDK 17 or Higher):**
+
+ **Maven:**
+https://maven.apache.org/install.html
+
+#### 2. Frontend (React)
+
+**Prerequisites:**
+
+- **Node.js and npm (Node Package Manager)**  
+  You'll need to install Node.js and npm to run the React frontend. You can download the latest version of Node.js from the [official website](https://nodejs.org/), which will include npm.
+   - Verify the installation by running:```bash
+     node -v
+     npm -v
+     ```
+**Clone the Repository:**
+`git clone https://github.com/nisha-toast/hangman-repository.git
+cd hangman-repository`
+   - Enter the frontend folder to install the dependencies:
+   - `cd "(frontend) hangman react"
+   - `npm install`
+
+**Run the Game:**
+   - Once both the backend and
+   - Double click the run.bat file in the root directory and follow the prompts
+   - The game should be running on `http://localhost:5173`
 
 ## Features
 - A simple Hangman game with a reactive UI built with ReactJS.
