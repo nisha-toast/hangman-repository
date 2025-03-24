@@ -5,7 +5,7 @@ A simple Hangman game with a backend built using Java Spring Boot and a frontend
 ## How to win?
 Guess the word correctly 5 times.
 
-## Steps to Run Locally
+## Steps to Run Locally (Updating...)
 
 ### Method 1: Run Manually Without Docker (Using Batch File)
 ** If you have the below dependencies, simply run the run.bat file. **
