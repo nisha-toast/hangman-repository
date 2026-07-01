@@ -62,7 +62,8 @@ cd hangman-repository`
 
 ## Suggestions for Future Work
 - Add more features like word submission.
-- Instead of a simple array of words, use an API to take words from elsewhere, or allow users to submit words and add to a database instead.
+- (DONE) Instead of a simple array of words, use an API to take words from elsewhere.
+- or allow users to submit words and add to a database instead.
 - Improve UI with animations or visual effects for the Hangman figure.
 - Expand game functionality (e.g., multiple difficulty levels, more word categories).
 
