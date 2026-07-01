@@ -26,7 +26,7 @@ export function HangmanGame() {
       <div className={classes.hangmanGame}>
         <WordDisplay progress={progress} attemptsLeft={attemptsLeft} score={score} />
 
-        <div className="drawing-box">
+        <div className={classes.drawingBox}>
           <HangmanDrawing stage={hangmanStage} />
         </div>
 
@@ -34,9 +34,9 @@ export function HangmanGame() {
         {gameWon && <p style={{ color: "green" }} className='final-message'>{message}</p>}
         {(!gameOver && !gameWon) && <p style={{ color: "darkslateblue" }} className='final-message'>{message}</p>}
 
-        <div className="keyboard-container">
+        <div className={classes.keyboardContainer}>
           {(!gameOver && !gameWon) ? (
-            <div>
+            <div style={{ width: '100%' }}>
               <Keyboard handleGuess={(letter) => handleGuess(gameId, letter)} usedLetters={usedLetters} correctWord={correctWord} />
               {correctWord && !gameWon && <NextWord nextWord={() => nextWord(gameId)} />}
             </div>
