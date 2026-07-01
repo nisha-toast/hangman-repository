@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.stickman.beans.GameStatus;
+import com.example.stickman.service.WordFetcher;
 
 @Service
 public class StickmanService {
