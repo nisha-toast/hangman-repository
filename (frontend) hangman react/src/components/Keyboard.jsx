@@ -4,9 +4,10 @@ import React from 'react';
 function KeyboardComponent({ handleGuess, usedLetters, gameOver, correctWord }) {
     // const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const rows = [
-        'ABCDEFGHIJ'.split(''),
-        'KLMNOPQRS'.split(''),
-        'TUVWXYZ'.split(''),
+        'ABCDEFG'.split(''),
+        'HIJKLMN'.split(''),
+        'OPQRST'.split(''),
+        'UVWXYZ'.split(''),
     ];
     
     return (

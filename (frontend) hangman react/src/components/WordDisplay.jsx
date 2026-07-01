@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-export function WordDisplay({ progress, attemptsLeft, score, wordsToGuess, wordsRemaining }) {
+export function WordDisplay({ progress, attemptsLeft, score }) {
     return (
         <div className="word-container">
-            <div className="word-left">
+            <div className="word-stats">
                 <p>Score: {score}</p>
                 <p>Lives Left: {attemptsLeft}</p>
             </div>
-            <div className="word-middle">
-                <p>Word: {progress}</p>
+            <div className="word-target">
+                <p>WORD: <span class="fancy-word">{progress}</span></p>
             </div>
         </div>
     );

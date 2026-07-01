@@ -10,4 +10,13 @@
     gap: 1rem;
 }
 
+@media (max-width: 720px) {
+  .content {
+    margin: 0.5rem auto;
+    padding: 8px;
+    gap: 0.5rem;
+  }
+}
+
+
 
