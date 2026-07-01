@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClientException;
 public class WordFetcher {
 
 	private final RestTemplate restTemplate;
-	private static final String API_URL = "https://random-word-api.herokuapp.com/word?number=10";
+	private static final String API_URL = "https://random-word-api.vercel.app/api?words=10";
 
 	// Fallback words in case API fails
 	private static final List<String> FALLBACK_WORDS = Arrays.asList(
