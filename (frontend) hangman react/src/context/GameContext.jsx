@@ -76,11 +76,9 @@ export const GameProvider = ({ children }) => {
           setCorrectWord(data.correctWord);
         })
         .catch((error) => {
-          // Non-fatal: log but keep optimistic UI
           console.error('Error fetching status after guess:', error);
         });
     } catch (error) {
-      // If the POST request fails, revert the optimistic change and show error
       console.error('Error sending guess:', error);
       setMessage('Network error while sending guess. Please try again.');
       setUsedLetters(prev => {
