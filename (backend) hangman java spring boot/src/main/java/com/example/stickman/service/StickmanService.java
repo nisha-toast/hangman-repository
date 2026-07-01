@@ -1,14 +1,11 @@
 package com.example.stickman.service;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.stickman.beans.GameStatus;
@@ -16,183 +13,58 @@ import com.example.stickman.beans.GameStatus;
 @Service
 public class StickmanService {
 
-	private String word;
-	private StringBuilder progress;
+	@Autowired
+	private WordFetcher wordFetcher;
 
-	// added
-	private int score;
+	// Store sessions keyed by a generated UUID. This keeps state isolated per
+	// game/session while the controller and service surface stateless APIs.
+	private final Map<String, GameSession> sessions = new ConcurrentHashMap<>();
 
-	private HashSet<Character> guessedLetters;
-	private int attemptsLeft;
-	private GameStatus gameStatus = new GameStatus();
-	
-	private final List<String> originalWords = Arrays.asList(
-			"Pasta", "Bread", "Soup", "Spaghetti", 
-			"Rice", "Fish", "Curry", "Mountain", "Belief",
-			"Drive", "Drives", "Passion", "Service" );
-
-	//Mutable list of words for the game
-	private List<String> wordList;
-	
-	private List<String> usedWords = new ArrayList<String>(); //
-	
-	public String getProgress() {
-		return progress.toString();
+	public String createSession() {
+		List<String> fetchedWords = wordFetcher.getWords();
+		GameSession session = new GameSession();
+		session.startNewGame(fetchedWords);
+		String id = UUID.randomUUID().toString();
+		sessions.put(id, session);
+		return id;
 	}
 
-	public int getAttemptsLeft() {
-		return attemptsLeft;
-	}
-
-	public StickmanService() {
-		this.wordList = new ArrayList<>();
-	}
-
-	public String getWord() {
-		if (word == null || wordList.isEmpty()) {
-			return "Error: No game started. Call the api for new game first.";
+	public GameStatus getGameState(String sessionId) {
+		GameSession session = sessions.get(sessionId);
+		if (session == null) {
+			// Return an empty/default status when session missing
+			return new GameSession().toGameStatus();
 		}
-		return "Current word: " + word;
+		return session.toGameStatus();
 	}
 
-	// method for starting new game
-	public void startNewGame() {
-
-		wordList = new ArrayList<>(originalWords);
-		Collections.shuffle(wordList);
-		this.word = wordList.get(0).toUpperCase(); 
-		System.out.println("the word: " + word);
-		this.progress = new StringBuilder("*".repeat(word.length()));
-		this.guessedLetters = new HashSet<>();
-		this.attemptsLeft = 10;
-		this.score = 0;
-
+	public String makeGuess(String sessionId, char guess) {
+		GameSession session = sessions.get(sessionId);
+		if (session == null) return "Invalid session";
+		return session.makeGuess(guess);
 	}
 
-	// indicate game over true or false
-	public boolean isGameOver() {
-		return attemptsLeft == 0;
+	public void nextWord(String sessionId) {
+		GameSession session = sessions.get(sessionId);
+		if (session == null) return;
+		session.nextWord();
 	}
 
-	public boolean isGameWon() {
-		return score == 5 || wordList.isEmpty();
-	}
-	
-	public boolean isCorrectWord() {
-		return progress.toString().equals(word);
-	}
-
-	public String makeGuess(char guess) {
-		if (guessedLetters.contains(guess)) {
-			return "Letter has already been guessed!";
-		}
-
-		guessedLetters.add(guess);
-
-		// indexOf() method returns -1 if the value is not found.
-		if (word.indexOf(guess) != -1) {
-			checkGuess(word, guess);
-			if (progress.toString().equals(word)) {
-				score += 1;
-				usedWords.add(word); //
-//				nextWord();
-				System.out.println("score:" + score);
-				return "The word has been guessed!";
-			} else {
-				return "Correct guess!";
-			}
-		} else {
-			attemptsLeft--;
-			if (attemptsLeft == 0) {
-				return "Game over. The word was " + word;
-			} else {
-				return "Incorrect guess";
-			}
-		}
+	public void resetScore(String sessionId) {
+		GameSession session = sessions.get(sessionId);
+		if (session == null) return;
+		// reset score by recreating the session words or resetting counter
+		// For now start a new game to reset state
+		session.startNewGame(wordFetcher.getWords());
 	}
 
-	public void nextWord() {
-		// remove the word already used
-		
-		if (!wordList.isEmpty()) {
-			wordList.remove(0).toUpperCase();
-			this.word = wordList.get(0).toUpperCase();
-			this.progress = new StringBuilder("*".repeat(word.length()));
-			this.guessedLetters = new HashSet<>();
-			this.attemptsLeft = 10;
-			System.out.println("The current word: " + word);
-			System.out.println("Remaining words: " + wordList);
-		}
-		else {
-			System.out.println("No more words left");
-			this.word = null;
-		}
+	public boolean isGameOver(String sessionId) {
+		GameSession session = sessions.get(sessionId);
+		return session == null ? true : session.isGameOver();
 	}
 
-	public void resetScore() {
-		score = 0;
-	}
-
-	public void checkGuess(String str, char guessed) {
-		CharacterIterator it = new StringCharacterIterator(str);
-
-		// Iterate and print current character
-		while (it.current() != CharacterIterator.DONE) {
-			if (it.current() == guessed) {
-				progress.setCharAt(it.getIndex(), guessed);
-			}
-			// Moving onto next element in the object
-			// using next() method
-			it.next();
-		}
-
-	}
-
-	public String getHangmanFigureState() {
-		String[] stages = { "nothing", // 0 incorrect guesses
-
-				"ground", // 1 incorrect guess
-
-				"stand", // 2 incorrect guesses
-
-				"rope", // 3 incorrect guesses
-
-				"hair", // 4 incorrect guesses
-
-				"head", // 5 incorrect guesses
-
-				"body", // 6 incorrect guesses
-
-				"left arm", // 7 incorrect guesses
-
-				"right arm", // 8 incorrect guesses
-
-				"left leg", // 9 incorrect guesses
-
-				"right leg" // 10 incorrect guesses;
-		};
-		int stageIndex = Math.min(10 - attemptsLeft, stages.length - 1);
-//		System.out.println("the stage is: " + stages[stageIndex]);
-		return stages[stageIndex];
-	}
-
-	public GameStatus resetGame() {
-		gameStatus.resetGame();
-		return gameStatus;
-	}
-
-	public GameStatus getGameState() {
-		GameStatus gameStatus = new GameStatus();
-		gameStatus.setProgress(progress.toString());
-		gameStatus.setAttemptsLeft(attemptsLeft);
-		gameStatus.setGameOver(isGameOver());
-		gameStatus.setGameWon(isGameWon());
-		gameStatus.setGuessedLetters(guessedLetters);
-		gameStatus.setWord(word);
-		gameStatus.setHangmanStateFigure(getHangmanFigureState());
-		gameStatus.setScore(score);
-		gameStatus.setCorrectWord(isCorrectWord());
-		
-		return gameStatus;
+	public boolean isCorrectWord(String sessionId) {
+		GameSession session = sessions.get(sessionId);
+		return session == null ? false : session.isCorrectWord();
 	}
 }

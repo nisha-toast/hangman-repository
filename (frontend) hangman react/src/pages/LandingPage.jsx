@@ -1,14 +1,18 @@
-import { useGame } from '../context/GameContext';
 import classes from "./LandingPage.module.css";
 import { useNavigate } from "react-router";
 
 export function LandingPage() {
     const navigate = useNavigate();
-    const { startNewGame } = useGame();
+    const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
-    const startGame = () => {
-        startNewGame();
-        navigate("/game"); // Navigate to the game page
+    const startGame = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/api/hangman/games`, { method: 'POST' });
+            const id = await res.text();
+            navigate(`/game/${id}`);
+        } catch (err) {
+            console.error('Failed to start game', err);
+        }
     };
 
     return (

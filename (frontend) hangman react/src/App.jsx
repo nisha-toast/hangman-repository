@@ -1,4 +1,3 @@
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import './App.css'
 import { Routes, Route } from 'react-router';
 import { LandingPage } from './pages/LandingPage'
@@ -14,11 +13,11 @@ function App() {
     <Routes>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />}></Route>
-        <Route path="/game" element={<HangmanGame />}> </Route>
+        <Route path="/game/:gameId" element={<HangmanGame />}> </Route>
       </Route>
     </Routes>
   );
-};
+}
 
 
 export default App
