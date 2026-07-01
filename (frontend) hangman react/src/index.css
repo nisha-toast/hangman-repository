@@ -110,23 +110,31 @@ button {
   font-size: 50px;
   font-family: Protest Strike, serif;
   font-weight: bold;
-  color:darkslateblue;
+  color: darkslateblue;
 }
 .word-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: min(95%, 900px);
+  max-width: 900px;
   margin: 0 auto;
   padding: 10px;
+  gap: 1.5rem;
 }
 
 .word-left {
-  text-align: right;
-  margin-right: -115px; /* Moves it slightly closer */
+  text-align: left;
+  margin-right: 0;
+  flex: 0 0 auto;
 }
 
 .word-middle {
   text-align: center;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.word-middle p {
+  word-break: break-word;
 }
