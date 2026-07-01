@@ -17,7 +17,8 @@ import com.example.stickman.service.StickmanService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${frontend.url}")
 @RequestMapping("/api/hangman")
 public class StickmanController {
 
