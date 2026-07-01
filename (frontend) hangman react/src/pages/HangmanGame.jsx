@@ -22,19 +22,21 @@ export function HangmanGame() {
   }, [gameId, loadGame]);
 
   return (
-    <div className={classes.hangmanInstructions}>
-      <div className="content">
+    <div className={classes.hangmanPage}>
+      <div className={classes.hangmanGame}>
         <WordDisplay progress={progress} attemptsLeft={attemptsLeft} score={score} />
+
         <div className="drawing-box">
           <HangmanDrawing stage={hangmanStage} />
         </div>
+
         {gameOver && <p style={{ color: "red" }} className='final-message'>{message}</p>}
         {gameWon && <p style={{ color: "green" }} className='final-message'>{message}</p>}
         {(!gameOver && !gameWon) && <p style={{ color: "darkslateblue" }} className='final-message'>{message}</p>}
 
-        <div className="keyboard">
+        <div className="keyboard-container">
           {(!gameOver && !gameWon) ? (
-            <div >
+            <div>
               <Keyboard handleGuess={(letter) => handleGuess(gameId, letter)} usedLetters={usedLetters} correctWord={correctWord} />
               {correctWord && !gameWon && <NextWord nextWord={() => nextWord(gameId)} />}
             </div>

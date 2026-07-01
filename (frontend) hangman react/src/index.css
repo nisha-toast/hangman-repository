@@ -1,6 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
 
 * {
   box-sizing: border-box;
@@ -8,7 +6,7 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -77,9 +75,10 @@ button {
 }
 
 .keyboard-button{
-  padding: 10px 20px;
+  width: 100%;
+  padding: 12px 0;
   font-size: 1rem;
-  font-family: Protest Strike, serif;
+  font-family: inherit;
   border: none;
   border-radius: 10px;
   /* background: #f0f0f0; */
@@ -91,6 +90,33 @@ button {
 .keyboard-button:not(:disabled):hover{
   /* color: seagreen; */
   background-color: violet;
+}
+
+.final-message {
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin: 0.85rem 0;
+  text-align: center;
+}
+
+.keyboard {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(10, minmax(44px, 1fr));
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.keyboard-row {
+  display: contents;
+}
+
+@media (max-width: 720px) {
+  .keyboard {
+    grid-template-columns: repeat(4, minmax(44px, 1fr));
+  }
 }
 
 .start-game-button:hover{
@@ -108,7 +134,7 @@ button {
 
 .fancy-word{
   font-size: 50px;
-  font-family: Protest Strike, serif;
+  font-family: inherit;
   font-weight: bold;
   color: darkslateblue;
 }
@@ -116,25 +142,70 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: min(95%, 900px);
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 10px;
+  width: min(760px, 100%);
+  max-width: 760px;
+  min-width: 560px;
+  min-height: 130px;
+  margin: -1.2rem auto 1.2rem;
+  padding: 0.85rem 1rem;
   gap: 1.5rem;
+  background: rgba(245, 240, 255, 0.96);
+  border: 1px solid rgba(95, 75, 190, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(50, 30, 120, 0.12);
+  box-sizing: border-box;
 }
 
 .word-left {
   text-align: left;
   margin-right: 0;
-  flex: 0 0 auto;
+  flex: 0 0 210px;
+  min-width: 210px;
+}
+
+.word-left p,
+.word-middle p {
+  margin: 0.35rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #2b2065;
+}
+
+.word-middle p {
+  text-transform: uppercase;
 }
 
 .word-middle {
   text-align: center;
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1 0 320px;
+  min-width: 320px;
 }
 
 .word-middle p {
   word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
+
+@media (max-width: 720px) {
+  .word-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: -1rem;
+    padding: 0.75rem 0.75rem;
+    min-height: auto;
+  }
+
+  .word-left,
+  .word-middle {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .word-middle {
+    min-width: 0;
+  }
+}
+
