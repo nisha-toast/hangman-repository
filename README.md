@@ -5,7 +5,10 @@ A simple Hangman game with a backend built using Java Spring Boot and a frontend
 ## How to win?
 Guess the word correctly 5 times.
 
-## Steps to Run Locally (Updating...)
+## Click the link to play
+https://hangmantime.up.railway.app/
+
+## Steps to Run Locally
 
 ### Method 1: Run Manually Without Docker (Using Batch File)
 ** If you have the below dependencies, simply run the run.bat file. **
@@ -59,7 +62,8 @@ cd hangman-repository`
 
 ## Suggestions for Future Work
 - Add more features like word submission.
-- Instead of a simple array of words, use an API to take words from elsewhere, or allow users to submit words and add to a database instead.
+- (DONE) Instead of a simple array of words, use an API to take words from elsewhere.
+- or allow users to submit words and add to a database instead.
 - Improve UI with animations or visual effects for the Hangman figure.
 - Expand game functionality (e.g., multiple difficulty levels, more word categories).
 
