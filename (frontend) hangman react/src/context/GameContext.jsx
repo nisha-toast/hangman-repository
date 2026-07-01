@@ -1,5 +1,9 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
+
+// API base helper (module scope so identity stays stable across renders)
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const buildUrl = (path) => (API_BASE ? `${API_BASE}${path}` : path);
 
 // Create the GameContext
 const GameContext = createContext();
@@ -11,8 +15,7 @@ export const useGame = () => {
 
 // Provider component that holds the game state
 export const GameProvider = ({ children }) => {
-  const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-  const buildUrl = (path) => (API_BASE ? `${API_BASE}${path}` : path);
+  // API_BASE and buildUrl are defined at module scope so their identity is stable
   const [progress, setProgress] = useState('');
   const [attemptsLeft, setAttemptsLeft] = useState(10);
   const [gameOver, setGameOver] = useState(false);
@@ -25,8 +28,9 @@ export const GameProvider = ({ children }) => {
 
   // No global initial fetch here — state is loaded per-session via loadGame(sessionId)
 
-  const loadGame = async (sessionId) => {
+  const loadGame = useCallback(async (sessionId) => {
     try {
+      setMessage('');
       const res = await fetch(buildUrl(`/api/hangman/games/${sessionId}/status`));
       const data = await res.json();
       setProgress(data.progress);
@@ -40,7 +44,7 @@ export const GameProvider = ({ children }) => {
     } catch (error) {
       console.error('Error loading game state:', error);
     }
-  };
+  }, []);
 
   const handleGuess = async (sessionId, letter) => {
     // Guard clauses
@@ -105,18 +109,19 @@ export const GameProvider = ({ children }) => {
       .catch((error) => console.error("Error getting next word:", error));
   };
 
-  const startNewGame = async (sessionId) => {
+  const startNewGame = useCallback(async (sessionId) => {
     try {
+      // Clear UI messages immediately when starting a new game
+      setMessage('');
       await fetch(buildUrl(`/api/hangman/games/${sessionId}/reset`), { method: 'POST' });
       // reload state
       await loadGame(sessionId);
       setGameWon(false);
       setCorrectWord(false);
-      setMessage('New game started! Good luck!');
     } catch (err) {
       console.error('Error starting new game:', err);
     }
-  };
+  }, [loadGame]);
 
   return (
     <GameContext.Provider value={{
