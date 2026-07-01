@@ -9,7 +9,7 @@ export const useGame = () => {
   return useContext(GameContext);
 };
 
-// Provider component that holds the game state
+
 export const GameProvider = ({ children }) => {
   const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const buildUrl = (path) => (API_BASE ? `${API_BASE}${path}` : path);
@@ -23,7 +23,6 @@ export const GameProvider = ({ children }) => {
   const [gameWon, setGameWon] = useState(false);
   const [correctWord, setCorrectWord] = useState(false);
 
-  // Fetch initial game state on mount
   useEffect(() => {
     fetch(buildUrl('/api/hangman/status'))
       .then(response => response.json())
@@ -58,13 +57,12 @@ export const GameProvider = ({ children }) => {
     setMessage(`Guessing ${letter}...`);
 
     try {
-
       const res = await fetch(buildUrl(`/api/hangman/guess?guess=${letter}`), { method: 'POST' });
 
       const serverMessage = await res.text();
       if (serverMessage) setMessage(serverMessage);
 
-      // Refresh status in background and reconcile state when it arrives
+
       fetch(buildUrl('/api/hangman/status'))
         .then(response => response.json())
         .then(data => {
