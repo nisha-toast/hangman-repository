@@ -11,6 +11,8 @@ export const useGame = () => {
 
 // Provider component that holds the game state
 export const GameProvider = ({ children }) => {
+  const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+  const buildUrl = (path) => (API_BASE ? `${API_BASE}${path}` : path);
   const [progress, setProgress] = useState('');
   const [attemptsLeft, setAttemptsLeft] = useState(10);
   const [gameOver, setGameOver] = useState(false);
@@ -23,7 +25,7 @@ export const GameProvider = ({ children }) => {
 
   // Fetch initial game state on mount
   useEffect(() => {
-    fetch(`/api/hangman/status`)
+    fetch(buildUrl('/api/hangman/status'))
       .then(response => response.json())
       .then(data => {
         setProgress(data.progress);
@@ -61,14 +63,14 @@ export const GameProvider = ({ children }) => {
 
     try {
       // Send guess to server but don't block the optimistic UI.
-      const res = await fetch(`/api/hangman/guess?guess=${letter}`, { method: 'POST' });
+      const res = await fetch(buildUrl(`/api/hangman/guess?guess=${letter}`), { method: 'POST' });
 
       // Try to read server message (text) if provided
       const serverMessage = await res.text();
       if (serverMessage) setMessage(serverMessage);
 
       // Refresh status in background and reconcile state when it arrives
-      fetch(`/api/hangman/status`)
+      fetch(buildUrl('/api/hangman/status'))
         .then(response => response.json())
         .then(data => {
           setProgress(data.progress);
@@ -97,7 +99,7 @@ export const GameProvider = ({ children }) => {
   };
 
   const nextWord = () => {
-    fetch(`/api/hangman/next`, { method: 'POST' })
+    fetch(buildUrl('/api/hangman/next'), { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         setProgress(data.progress);
@@ -113,8 +115,8 @@ export const GameProvider = ({ children }) => {
   };
 
   const startNewGame = () => {
-    fetch(`/api/hangman/start`, { method: 'POST' })
-      .then(() => fetch(`/api/hangman/status`))
+    fetch(buildUrl('/api/hangman/start'), { method: 'POST' })
+      .then(() => fetch(buildUrl('/api/hangman/status')))
       .then(response => response.json())
       .then(data => {
         setProgress(data.progress);
