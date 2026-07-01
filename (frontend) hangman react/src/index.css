@@ -191,11 +191,16 @@ button {
 }
 
 .fancy-word {
-  font-size: 1.6rem;
+  /* Use the parent's font-size (so headings sized in module CSS take effect)
+     and keep a clean purple appearance without stroke/strong shadows. */
+  font-size: inherit;
   font-family: inherit;
   font-weight: 900;
   color: darkslateblue;
-  letter-spacing: 2px;
+  letter-spacing: 0.06em;
+  display: inline-block;
+  line-height: 1;
+  margin: 0;
 }
 
 @media (max-width: 720px) {

@@ -7,7 +7,7 @@ export function MainNavigation() {
         <nav>
             <ul className={classes.list}>
                 <li><Link to="/" style={{color:"darkslateblue"}}>Home Page</Link></li>
-                {/* <li><Link to="/game" style={{color:"darkslateblue"}}>Game</Link></li>*/}
+                {/*<li><Link to="/game" style={{color:"darkslateblue"}}>Game</Link></li>*/}
             </ul>
         </nav>
     </header>);
