@@ -31,6 +31,7 @@ public class GameSession {
         this.guessedLetters = new HashSet<>();
         this.attemptsLeft = 10;
         this.score = 0;
+        System.out.println("[HANGMAN] New game started. Current word: " + this.word);
     }
 
     public boolean isGameOver() {
@@ -65,6 +66,7 @@ public class GameSession {
         } else {
             attemptsLeft--;
             if (attemptsLeft == 0) {
+                System.out.println("[HANGMAN] Game over. The word was: " + word);
                 return "Game over. The word was " + word;
             } else {
                 return "Incorrect guess";
@@ -82,6 +84,7 @@ public class GameSession {
             this.progress = new StringBuilder("*".repeat(word.length()));
             this.guessedLetters = new HashSet<>();
             this.attemptsLeft = 10;
+            System.out.println("[HANGMAN] Moving to next word: " + this.word);
         } else {
             this.word = null;
             this.progress = null;
