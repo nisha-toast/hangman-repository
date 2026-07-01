@@ -1,4 +1,7 @@
-export function Keyboard({ handleGuess, usedLetters, gameOver, correctWord }) {
+/* eslint-disable react/prop-types */
+import React from 'react';
+
+function KeyboardComponent({ handleGuess, usedLetters, gameOver, correctWord }) {
     // const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const rows = [
         'ABCDEFGHIJ'.split(''),
@@ -10,18 +13,24 @@ export function Keyboard({ handleGuess, usedLetters, gameOver, correctWord }) {
         <div className="keyboard">
             {rows.map((row, rowIndex) => (
                 <div key={rowIndex} className="keyboard-row">
-                    {row.map((letter) => (
+                    {row.map((letter) => {
+                        const isUsed = usedLetters && typeof usedLetters.has === 'function' && usedLetters.has(letter);
+                        return (
                         <button 
                             color="seagreen"
                             key={letter}
                             onClick={() => handleGuess(letter)}
-                            disabled={usedLetters.has(letter) || gameOver || correctWord}
+                            disabled={isUsed || gameOver || correctWord}
                             className="keyboard-button">
                             {letter}
                         </button>
-                    ))}
+                        );
+                    })}
                 </div>
             ))}
         </div>
     );
-};
+}
+
+// Memoize to avoid unnecessary re-renders when unrelated context changes
+export const Keyboard = React.memo(KeyboardComponent);

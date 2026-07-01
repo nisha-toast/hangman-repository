@@ -13,7 +13,7 @@ public class GameStatus {
 	private boolean gameWon;
 	private boolean correctWord;
 	private int score;
-	
+
 	public boolean isGameWon() {
 		return gameWon;
 	}
@@ -78,7 +78,6 @@ public class GameStatus {
 		this.score = score;
 	}
 
-	
 	public void resetGame() {
 		guessedLetters.clear();
 		progress = "";

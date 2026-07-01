@@ -3,12 +3,11 @@ package com.example.stickman.service;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.stickman.beans.GameStatus;
@@ -19,17 +18,19 @@ public class StickmanService {
 	private String word;
 	private StringBuilder progress;
 
+	@Autowired
+	private WordFetcher wordFetcher;
+
+	public StickmanService() {
+		this.wordList = new ArrayList<>();
+	}
+
 	// added
 	private int score;
 
 	private HashSet<Character> guessedLetters;
 	private int attemptsLeft;
 	private GameStatus gameStatus = new GameStatus();
-	
-	private final List<String> originalWords = Arrays.asList(
-			"Pasta", "Bread", "Soup", "Spaghetti", 
-			"Rice", "Fish", "Curry", "Mountain", "Belief",
-			"Drive", "Drives", "Passion", "Service" );
 
 	//Mutable list of words for the game
 	private List<String> wordList;
@@ -44,21 +45,18 @@ public class StickmanService {
 		return attemptsLeft;
 	}
 
-	public StickmanService() {
-		this.wordList = new ArrayList<>();
-	}
-
-	public String getWord() {
-		if (word == null || wordList.isEmpty()) {
-			return "Error: No game started. Call the api for new game first.";
-		}
-		return "Current word: " + word;
-	}
+//	public String getWord() {
+//		if (word == null || wordList.isEmpty()) {
+//			return "Error: No game started. Call the api for new game first.";
+//		}
+//		return "Current word: " + word;
+//	}
 
 	// method for starting new game
 	public void startNewGame() {
-
-		wordList = new ArrayList<>(originalWords);
+		// Get words from API (cached after first call)
+		List<String> fetchedWords = wordFetcher.getWords();
+		wordList = new ArrayList<>(fetchedWords);
 		Collections.shuffle(wordList);
 		this.word = wordList.get(0).toUpperCase(); 
 		System.out.println("the word: " + word);
@@ -77,10 +75,14 @@ public class StickmanService {
 	public boolean isGameWon() {
 		return score == 5 || wordList.isEmpty();
 	}
-	
-	public boolean isCorrectWord() {
-		return progress.toString().equals(word);
+
+public boolean isCorrectWord() {
+	if (progress == null || word == null) {
+		return false;
 	}
+	return progress.toString().equals(word);
+}
+
 
 	public String makeGuess(char guess) {
 		if (guessedLetters.contains(guess)) {
@@ -110,22 +112,22 @@ public class StickmanService {
 			}
 		}
 	}
-
 	public void nextWord() {
-		// remove the word already used
-		
 		if (!wordList.isEmpty()) {
-			wordList.remove(0).toUpperCase();
+			wordList.remove(0); // Safely discard the used word
+		}
+
+		if (!wordList.isEmpty()) { // Double-check if a next word actually exists
 			this.word = wordList.get(0).toUpperCase();
 			this.progress = new StringBuilder("*".repeat(word.length()));
 			this.guessedLetters = new HashSet<>();
 			this.attemptsLeft = 10;
 			System.out.println("The current word: " + word);
 			System.out.println("Remaining words: " + wordList);
-		}
-		else {
+		} else {
 			System.out.println("No more words left");
 			this.word = null;
+			this.progress = null;
 		}
 	}
 
@@ -183,6 +185,21 @@ public class StickmanService {
 
 	public GameStatus getGameState() {
 		GameStatus gameStatus = new GameStatus();
+
+		// Check if the game has actually been started yet
+		if (this.progress == null) {
+			gameStatus.setProgress("");
+			gameStatus.setAttemptsLeft(10);
+			gameStatus.setGameOver(false);
+			gameStatus.setGameWon(false);
+			gameStatus.setGuessedLetters(new HashSet<>());
+			gameStatus.setWord("");
+			gameStatus.setHangmanStateFigure("nothing");
+			gameStatus.setScore(0);
+			gameStatus.setCorrectWord(false);
+			return gameStatus;
+		}
+
 		gameStatus.setProgress(progress.toString());
 		gameStatus.setAttemptsLeft(attemptsLeft);
 		gameStatus.setGameOver(isGameOver());
@@ -192,7 +209,7 @@ public class StickmanService {
 		gameStatus.setHangmanStateFigure(getHangmanFigureState());
 		gameStatus.setScore(score);
 		gameStatus.setCorrectWord(isCorrectWord());
-		
+
 		return gameStatus;
 	}
 }

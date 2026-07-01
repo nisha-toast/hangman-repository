@@ -10,7 +10,7 @@ import classes from "./HangmanGame.module.css";
 export function HangmanGame() {
   const { 
     progress, attemptsLeft, score, gameOver, hangmanStage, message, 
-    usedLetters, gameWon, correctWord, handleGuess, nextWord, startNewGame 
+    usedLetters, gameWon, correctWord, handleGuess, nextWord, startNewGame
   } = useGame();
 
   return (
@@ -35,7 +35,7 @@ export function HangmanGame() {
               {!gameWon && <GameOver startNewGame={startNewGame} />}
             </>
           )}
-          {gameWon && <GameWon />}
+          {gameWon && <GameWon startNewGame={startNewGame} />}
         </div>
       </div>
     </div>

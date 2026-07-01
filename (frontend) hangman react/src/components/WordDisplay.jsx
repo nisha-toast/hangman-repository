@@ -1,4 +1,5 @@
-export function WordDisplay({ progress, attemptsLeft, score }) {
+/* eslint-disable react/prop-types */
+export function WordDisplay({ progress, attemptsLeft, score, wordsToGuess, wordsRemaining }) {
     return (
         <div className="word-container">
             <div className="word-left">

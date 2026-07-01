@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import { createContext, useContext, useState, useEffect } from 'react';
 
 // Create the GameContext
 const GameContext = createContext();
@@ -42,25 +43,57 @@ export const GameProvider = ({ children }) => {
   }, []);
 
   // Functions to interact with the game (e.g., guess a letter, start a new game, go to next word)
-  const handleGuess = (letter) => {
-    if (usedLetters.has(letter)) return;
-    fetch(`/api/hangman/guess?guess=${letter}`, { method: 'POST' })
-      .then(response => response.text())
-      .then(message => {
-        setMessage(message);
-        fetch(`/api/hangman/status`)
-          .then(response => response.json())
-          .then(data => {
-            setProgress(data.progress);
-            setAttemptsLeft(data.attemptsLeft);
-            setGameOver(data.gameOver);
-            setHangmanStage(data.hangmanFigureState);
-            setUsedLetters(new Set(data.guessedLetters));
-            setScore(data.score);
-            setGameWon(data.gameWon);
-            setCorrectWord(data.correctWord);
-          });
+  // Improved handleGuess with optimistic UI update and background status refresh to avoid
+  // blocking the UI while waiting for the backend round-trip.
+  const handleGuess = async (letter) => {
+    // Guard clauses
+    if (usedLetters.has(letter) || gameOver || correctWord) return;
+
+    // Optimistically mark the letter as used so UI updates immediately
+    setUsedLetters(prev => {
+      const next = new Set(prev);
+      next.add(letter);
+      return next;
+    });
+
+    // Give immediate feedback to the user
+    setMessage(`Guessing ${letter}...`);
+
+    try {
+      // Send guess to server but don't block the optimistic UI.
+      const res = await fetch(`/api/hangman/guess?guess=${letter}`, { method: 'POST' });
+
+      // Try to read server message (text) if provided
+      const serverMessage = await res.text();
+      if (serverMessage) setMessage(serverMessage);
+
+      // Refresh status in background and reconcile state when it arrives
+      fetch(`/api/hangman/status`)
+        .then(response => response.json())
+        .then(data => {
+          setProgress(data.progress);
+          setAttemptsLeft(data.attemptsLeft);
+          setGameOver(data.gameOver);
+          setHangmanStage(data.hangmanFigureState);
+          setUsedLetters(new Set(data.guessedLetters));
+          setScore(data.score);
+          setGameWon(data.gameWon);
+          setCorrectWord(data.correctWord);
+        })
+        .catch((error) => {
+          // Non-fatal: log but keep optimistic UI
+          console.error('Error fetching status after guess:', error);
+        });
+    } catch (error) {
+      // If the POST request fails, revert the optimistic change and show error
+      console.error('Error sending guess:', error);
+      setMessage('Network error while sending guess. Please try again.');
+      setUsedLetters(prev => {
+        const next = new Set(prev);
+        next.delete(letter);
+        return next;
       });
+    }
   };
 
   const nextWord = () => {
@@ -87,6 +120,9 @@ export const GameProvider = ({ children }) => {
         setProgress(data.progress);
         setAttemptsLeft(10);
         setGameOver(false);
+        // Ensure gameWon and correctWord are reset when starting a new game
+        setGameWon(false);
+        setCorrectWord(false);
         setHangmanStage(data.hangmanFigureState);
         setMessage('New game started! Good luck!');
         setUsedLetters(new Set(data.guessedLetters));
