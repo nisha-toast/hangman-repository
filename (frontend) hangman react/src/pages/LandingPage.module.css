@@ -22,7 +22,7 @@
 }
 
 .landingDescription {
-    font-family: 'Protest Strike';
+    font-family: inherit;
     font-style: normal;
     margin: 40px;
     font-weight: bold;

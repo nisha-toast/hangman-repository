@@ -1,5 +1,6 @@
 package com.example.stickman.beans;
 import java.util.HashSet;
+import java.util.Set;
 
 public class GameStatus {
 	private String progress;
@@ -7,7 +8,7 @@ public class GameStatus {
 	private boolean gameOver;
 	private String hangmanStateFigure;
 	private String word;
-	private HashSet<Character> guessedLetters;
+	private Set<Character> guessedLetters;
 	
 	//added
 	private boolean gameWon;
@@ -42,11 +43,11 @@ public class GameStatus {
 		this.word = word;
 	}
 
-	public void setGuessedLetters(HashSet<Character> guessedLetters) {
+	public void setGuessedLetters(Set<Character> guessedLetters) {
 		this.guessedLetters = guessedLetters;
 	}
 
-	public HashSet<Character> getGuessedLetters() {
+	public Set<Character> getGuessedLetters() {
 		return guessedLetters;
 	}
 
@@ -66,7 +67,8 @@ public class GameStatus {
 		return gameOver;
 	}
 
-	public String getHangmanFigureState() {
+	// Standard getter name for the 'hangmanStateFigure' property
+	public String getHangmanStateFigure() {
 		return hangmanStateFigure;
 	}
 
@@ -79,7 +81,11 @@ public class GameStatus {
 	}
 
 	public void resetGame() {
-		guessedLetters.clear();
+		if (guessedLetters == null) {
+			guessedLetters = new HashSet<>();
+		} else {
+			guessedLetters.clear();
+		}
 		progress = "";
 		attemptsLeft = 10;
 		gameOver = false;

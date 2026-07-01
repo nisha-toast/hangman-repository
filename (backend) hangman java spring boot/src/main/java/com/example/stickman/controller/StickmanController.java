@@ -1,6 +1,5 @@
 package com.example.stickman.controller;
 
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,64 +23,42 @@ public class StickmanController {
 
 	@Autowired
 	private StickmanService stickmanService;
-//	private GameStatus gameStatus;
-	
-	//Inject service
-	public StickmanController(StickmanService stickmanService) {
-		this.stickmanService = stickmanService;
+
+	// Create a new per-link game/session and return its id
+	@PostMapping("/games")
+	public ResponseEntity<String> createGame() {
+		String id = stickmanService.createSession();
+		return ResponseEntity.ok(id);
 	}
 
-	//Game current state
-	@GetMapping("/status")
-	public ResponseEntity<GameStatus> getStatus(){
-		GameStatus gameStatus = stickmanService.getGameState();
+	// Game current state for a particular session id
+	@GetMapping("/games/{id}/status")
+	public ResponseEntity<GameStatus> getStatus(@org.springframework.web.bind.annotation.PathVariable String id){
+		GameStatus gameStatus = stickmanService.getGameState(id);
 		return ResponseEntity.ok(gameStatus);
 	}
 
-	@PostMapping("/guess")
-	public ResponseEntity<String> guessLetter(@RequestParam char guess){
-		String response = stickmanService.makeGuess(guess);
-		
-		if (stickmanService.isGameOver()) {
+	@PostMapping("/games/{id}/guess")
+	public ResponseEntity<String> guessLetter(@org.springframework.web.bind.annotation.PathVariable String id, @RequestParam char guess){
+		String response = stickmanService.makeGuess(id, guess);
+		if (stickmanService.isGameOver(id)) {
 			return ResponseEntity.ok(response);
 		}
 		System.out.println(response);
-		
-//		GameStatus gameStatus = stickmanService.getGameState();
-//		return ResponseEntity.ok(response + "Current status: " + gameStatus.getProgress());
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping("/start")
-	public ResponseEntity<String> startNewGame() {
-		stickmanService.startNewGame();
-		return ResponseEntity.ok("New game started!");
-	}
-	
-	@GetMapping("/guessed-letters")
-	public Set<Character> getGuessedLetters(){
-		return stickmanService.getGameState().getGuessedLetters();
-	}
-	
-//	@PostMapping("/reset")
-//	public GameStatus resetGame() {
-//		return stickmanService.resetGame();
-//	}
-	
-	@PostMapping("/reset-game")
-	public ResponseEntity<String> resetGame() {
-		stickmanService.resetScore();
-		stickmanService.startNewGame();
+	@PostMapping("/games/{id}/reset")
+	public ResponseEntity<String> resetGame(@org.springframework.web.bind.annotation.PathVariable String id) {
+		stickmanService.resetScore(id);
 		return ResponseEntity.ok("New game has started!");
 	}
-	
-	//Next word
-	@PostMapping("/next")
-	public ResponseEntity<GameStatus> nextWord(){
-		stickmanService.nextWord();
-		stickmanService.isCorrectWord();
-		System.out.println("in next word mapping");
-		GameStatus gameStatus = stickmanService.getGameState();
+
+	//Next word for a session id
+	@PostMapping("/games/{id}/next")
+	public ResponseEntity<GameStatus> nextWord(@org.springframework.web.bind.annotation.PathVariable String id){
+		stickmanService.nextWord(id);
+		GameStatus gameStatus = stickmanService.getGameState(id);
 		return ResponseEntity.ok(gameStatus);
 	}
 }

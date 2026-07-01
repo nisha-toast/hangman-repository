@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 // Create the GameContext
 const GameContext = createContext();
@@ -9,7 +9,7 @@ export const useGame = () => {
   return useContext(GameContext);
 };
 
-
+// Provider component that holds the game state
 export const GameProvider = ({ children }) => {
   const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const buildUrl = (path) => (API_BASE ? `${API_BASE}${path}` : path);
@@ -23,27 +23,26 @@ export const GameProvider = ({ children }) => {
   const [gameWon, setGameWon] = useState(false);
   const [correctWord, setCorrectWord] = useState(false);
 
-  useEffect(() => {
-    fetch(buildUrl('/api/hangman/status'))
-      .then(response => response.json())
-      .then(data => {
-        setProgress(data.progress);
-        setAttemptsLeft(data.attemptsLeft);
-        setGameOver(data.gameOver);
-        setHangmanStage(data.hangmanFigureState);
-        setScore(data.score);
-        setGameWon(data.gameWon);
-        setCorrectWord(data.correctWord);
+  // No global initial fetch here — state is loaded per-session via loadGame(sessionId)
 
-        if (data.guessedLetters) {
-          setUsedLetters(new Set(data.guessedLetters));
-          
-        }
-      })
-      .catch((error) => console.error("Error fetching status:", error));
-  }, []);
+  const loadGame = async (sessionId) => {
+    try {
+      const res = await fetch(buildUrl(`/api/hangman/games/${sessionId}/status`));
+      const data = await res.json();
+      setProgress(data.progress);
+      setAttemptsLeft(data.attemptsLeft);
+      setGameOver(data.gameOver);
+      setHangmanStage(data.hangmanStateFigure);
+      setScore(data.score);
+      setGameWon(data.gameWon);
+      setCorrectWord(data.correctWord);
+      if (data.guessedLetters) setUsedLetters(new Set(data.guessedLetters));
+    } catch (error) {
+      console.error('Error loading game state:', error);
+    }
+  };
 
-  const handleGuess = async (letter) => {
+  const handleGuess = async (sessionId, letter) => {
     // Guard clauses
     if (usedLetters.has(letter) || gameOver || correctWord) return;
 
@@ -57,19 +56,20 @@ export const GameProvider = ({ children }) => {
     setMessage(`Guessing ${letter}...`);
 
     try {
-      const res = await fetch(buildUrl(`/api/hangman/guess?guess=${letter}`), { method: 'POST' });
+
+      const res = await fetch(buildUrl(`/api/hangman/games/${sessionId}/guess?guess=${letter}`), { method: 'POST' });
 
       const serverMessage = await res.text();
       if (serverMessage) setMessage(serverMessage);
 
-
-      fetch(buildUrl('/api/hangman/status'))
+      // Refresh status in background and reconcile state when it arrives
+      fetch(buildUrl(`/api/hangman/games/${sessionId}/status`))
         .then(response => response.json())
         .then(data => {
           setProgress(data.progress);
           setAttemptsLeft(data.attemptsLeft);
           setGameOver(data.gameOver);
-          setHangmanStage(data.hangmanFigureState);
+          setHangmanStage(data.hangmanStateFigure);
           setUsedLetters(new Set(data.guessedLetters));
           setScore(data.score);
           setGameWon(data.gameWon);
@@ -89,14 +89,14 @@ export const GameProvider = ({ children }) => {
     }
   };
 
-  const nextWord = () => {
-    fetch(buildUrl('/api/hangman/next'), { method: 'POST' })
+  const nextWord = (sessionId) => {
+    fetch(buildUrl(`/api/hangman/games/${sessionId}/next`), { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         setProgress(data.progress);
         setAttemptsLeft(10);
         setGameOver(data.gameOver);
-        setHangmanStage(data.hangmanFigureState);
+        setHangmanStage(data.hangmanStateFigure);
         setMessage("Here's the next word.");
         setUsedLetters(new Set(data.guessedLetters));
         setCorrectWord(data.correctWord);
@@ -105,30 +105,24 @@ export const GameProvider = ({ children }) => {
       .catch((error) => console.error("Error getting next word:", error));
   };
 
-  const startNewGame = () => {
-    fetch(buildUrl('/api/hangman/start'), { method: 'POST' })
-      .then(() => fetch(buildUrl('/api/hangman/status')))
-      .then(response => response.json())
-      .then(data => {
-        setProgress(data.progress);
-        setAttemptsLeft(10);
-        setGameOver(false);
-        // Ensure gameWon and correctWord are reset when starting a new game
-        setGameWon(false);
-        setCorrectWord(false);
-        setHangmanStage(data.hangmanFigureState);
-        setMessage('New game started! Good luck!');
-        setUsedLetters(new Set(data.guessedLetters));
-        setScore(0);
-      })
-      .catch((error) => console.error("Error resetting game:", error));
+  const startNewGame = async (sessionId) => {
+    try {
+      await fetch(buildUrl(`/api/hangman/games/${sessionId}/reset`), { method: 'POST' });
+      // reload state
+      await loadGame(sessionId);
+      setGameWon(false);
+      setCorrectWord(false);
+      setMessage('New game started! Good luck!');
+    } catch (err) {
+      console.error('Error starting new game:', err);
+    }
   };
 
   return (
     <GameContext.Provider value={{
-      progress, attemptsLeft, gameOver, hangmanStage, message, 
-      usedLetters, score, gameWon, correctWord, 
-      handleGuess, nextWord, startNewGame
+        progress, attemptsLeft, gameOver, hangmanStage, message,
+        usedLetters, score, gameWon, correctWord,
+        handleGuess, nextWord, startNewGame, loadGame
     }}>
       {children}
     </GameContext.Provider>
